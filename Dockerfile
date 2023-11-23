@@ -1,16 +1,7 @@
-FROM ubuntu:latest AS build
-
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
+FROM maven:3-eclipse-temurin-17 AS build
 COPY . .
-
-RUN apt-get install maven -y
-RUN mvn clean install
-
-FROM openjdk:17-jdk-slim
-
+RUN mvn clean package -Pprod -DskipTests
+FROM eclipse-temurin:17-alpine
+COPY --from=build /target/operacion-fuego-de-quasar-0.0.1-SNAPSHOT.jar demo.jar
 EXPOSE 8080
-
-COPY --from=build /target/deploy_render-1.0.0.jar app.jar
-
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT ["java","-jar","demo.jar"]
