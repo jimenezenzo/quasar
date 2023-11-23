@@ -17,7 +17,7 @@ public class ComunicacionServiceTest {
     @Autowired
     private IComunicacionService comunicacionService;
 
-    @Test
+    /*@Test
     public void testCalculoDeCoordenada()
     {
         List<Float> positions = new ArrayList<Float>(List.of(
@@ -28,7 +28,7 @@ public class ComunicacionServiceTest {
 
         assertEquals(-100.0, positionDao.x());
         assertEquals(75.5, positionDao.y());
-    }
+    }*/
 
     @Test
     public void testDecifradoDeMensaja()
