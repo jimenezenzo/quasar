@@ -1,16 +1,11 @@
 package com.jimenez.operacion.fuego.quasar.models;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 public class Satelite
 {
-    @NotBlank(message = "The name is required.")
-    public String name;
-    @NotNull(message = "The x is required.")
-    public float x;
-    @NotNull(message = "The y is required.")
-    public float y;
+    private String name;
+    private float x;
+    private float y;
+    private String[] message;
 
     public Satelite(String name, float x, float y) {
         this.name = name;
@@ -24,6 +19,14 @@ public class Satelite
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String[] getMessage() {
+        return message;
+    }
+
+    public void setMessage(String[] message) {
+        this.message = message;
     }
 
     public float getX() {

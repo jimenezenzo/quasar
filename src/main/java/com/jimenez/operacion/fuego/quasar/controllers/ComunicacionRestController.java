@@ -1,5 +1,6 @@
 package com.jimenez.operacion.fuego.quasar.controllers;
 
+import com.jimenez.operacion.fuego.quasar.exceptions.SateliteException;
 import com.jimenez.operacion.fuego.quasar.models.dao.*;
 import com.jimenez.operacion.fuego.quasar.services.IComunicacionService;
 import jakarta.validation.Valid;
@@ -17,29 +18,37 @@ public class ComunicacionRestController
     @PostMapping("topsecret")
     public FuenteResponseDao postSatelites(@Valid @RequestBody SatelitesRequestDao sateliteDao)
     {
-        float[] distances = new float[sateliteDao.satelites().size()];
         List<Float> distancesList = sateliteDao.satelites()
                 .stream()
                 .map(SateliteRequestDao::distance)
                 .toList();
 
-        int index = 0;
-        for (final Float value: distancesList) {
-            distances[index++] = value;
-        }
+        List<String[]> messagesList = sateliteDao.satelites()
+                .stream()
+                .map(SateliteRequestDao::message)
+                .toList();
 
-        return new FuenteResponseDao(this.comunicacionService.getLocation(distances), "message");
+        return new FuenteResponseDao(
+                this.comunicacionService.descifrarPosition(distancesList),
+                this.comunicacionService.descifrarMessage(messagesList)
+        );
     }
 
     @PostMapping("topsecret_split/{name}")
     public FuenteResponseDao postSatelite(@Valid @RequestBody FuenteRequestDao fuenteRequestDao, @PathVariable String name)
     {
-        return new FuenteResponseDao(this.comunicacionService.getLocation(), "message");
+        throw new SateliteException();
     }
 
     @GetMapping("topsecret_split/{name}")
     public FuenteResponseDao getSatelite(@PathVariable String name)
     {
-        return new FuenteResponseDao(this.comunicacionService.getLocation(), "message");
+        FuenteResponseDao fuenteResponseDao = this.comunicacionService.getSatelite(name);
+
+        if (fuenteResponseDao == null) {
+            throw new SateliteException();
+        }
+
+        return fuenteResponseDao;
     }
 }
